@@ -54,7 +54,15 @@ export class ProjectPrototype1Stack extends Stack {
       },
     });
 
+    // subscribes to topic and posts to Slack
+    const slackFunction = new lambda.Function(this, 'subscriber-to-slack-lambda', {
+      runtime: lambda.Runtime.NODEJS_16_X,
+      code: lambda.Code.fromAsset('lambdas'),
+      handler: 'postToSlackLambda.handler',
+    })
+
     topic.addSubscription(new subs.LambdaSubscription(writerFunction));
+    topic.addSubscription(new subs.LambdaSubscription(slackFunction));
     
     topic.grantPublish(publisherFunction)
     table.grantReadWriteData(writerFunction)
