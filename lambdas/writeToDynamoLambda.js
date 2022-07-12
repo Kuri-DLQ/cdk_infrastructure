@@ -8,7 +8,8 @@ exports.handler = (event) => {
       TableName: process.env.TABLE_NAME,
       Item: {
         "id": { S: record.Sns.MessageId },
-        "message": { S: record.Sns.Message },
+        "Message": { S: record.Sns.Message },
+        "Attributes": { S: JSON.stringify(record.Sns.MessageAttributes) }
       }
     }
       
