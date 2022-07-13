@@ -6,7 +6,8 @@ exports.handler = (event) => {
   for (const record of event.Records) {
     const params = {
       MessageBody: record.body,
-      QueueURL: process.env.QUEUE_URL,
+      QueueUrl: process.env.QUEUE_URL,
+      MessageAttributes: record.messageAttributes
     }
 
     // the run function uses .promise() instead of giving sendMessage a second callback argument
@@ -24,7 +25,14 @@ exports.handler = (event) => {
   }
 }
 
+
+
 /*
+      result[key] = {
+        "DataType": `${attributes[key]["dataType"]}`,
+        "StringValue": `${attributes[key]["stringValue"]}`
+      }
+
 {
   "Records": [
     {
@@ -44,5 +52,21 @@ exports.handler = (event) => {
       "awsRegion": "us-east-1"
     }
   ]
+}
+
+{
+    "Records": [
+        {
+            "body": "Flower order",
+            "messageAttributes": {
+                "order": {
+                    "dataType": "String",
+                    "stringValue": "Flowers",
+                }
+            }
+        },
+
+
+    ]
 }
 */
