@@ -22,6 +22,18 @@ export class ProjectPrototype1Stack extends Stack {
       deadLetterQueue,
     });
 
+    // lambda that serves as a producer for main queue:
+    const producerFunction = new lambda.Function(this, "producer-lambda", {
+      code: lambda.Code.fromAsset('lambdas'),
+      handler: 'producerLambda.handler',
+      runtime: lambda.Runtime.NODEJS_16_X,
+      environment: {
+        QUEUE_URL: mainQueue.queueUrl,
+      }
+    })
+
+    mainQueue.grantSendMessages(producerFunction);
+
     const topic = new sns.Topic(this, 'topic');
 
     // polls from DLQ and publishes to SNS topic
@@ -63,7 +75,7 @@ export class ProjectPrototype1Stack extends Stack {
 
     topic.addSubscription(new subs.LambdaSubscription(writerFunction));
     topic.addSubscription(new subs.LambdaSubscription(slackFunction));
-    
+
     topic.grantPublish(publisherFunction)
     table.grantReadWriteData(writerFunction)
   }
