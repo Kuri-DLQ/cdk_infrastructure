@@ -34,6 +34,16 @@ export class ProjectPrototype1Stack extends Stack {
 
     mainQueue.grantSendMessages(producerFunction);
 
+    // consumer lambda that polls from the main queue
+    const consumerLambda = new lambda.Function(this, "consumer-lambda", {
+      runtime: lambda.Runtime.NODEJS_16_X,
+      code: lambda.Code.fromAsset('lambdas'),
+      handler: 'consumerLambda.handler',
+      events: [
+        new SqsEventSource(mainQueue),
+      ]
+    }) 
+
     const topic = new sns.Topic(this, 'topic');
 
     // polls from DLQ and publishes to SNS topic
