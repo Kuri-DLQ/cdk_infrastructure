@@ -1,8 +1,10 @@
 exports.handler = (event) => {
   for (const record of event.Records) {
+    // console.log(record.messageAttributes)
     for (const attribute in record.messageAttributes) {
-      if (attribute.dataType === 'String') {
-        console.log(attribute.dataValue);
+      console.log(record.messageAttributes[attribute].dataType)
+      if (record.messageAttributes[attribute].dataType === 'String') {
+        console.log(record.messageAttributes[attribute].stringValue);
       } else {
         throw "Message not processed";
       }
