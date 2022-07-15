@@ -6,8 +6,9 @@ import * as dynamo from 'aws-cdk-lib/aws-dynamodb';
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+require("dotenv").config();
 
-export class ProjectPrototype1Stack extends Stack {
+export class DlqOnlyStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -18,9 +19,17 @@ export class ProjectPrototype1Stack extends Stack {
       queue: DLQ,
     };
 
-    const mainQueue = new sqs.Queue(this, 'main-queue', {
-      deadLetterQueue,
-    });
+    const mainQueueArn: any = process.env.MAIN_QUEUE_ARN
+    const mainQueue = sqs.Queue.fromQueueArn(this, 'mainQueue', mainQueueArn)
+
+sqs.Queue.fromQueueAttributes(this, 'mainQueue', {
+  queueArn: mainQueueArn,
+  
+})
+
+    // const mainQueue = new sqs.Queue(this, 'main-queue', {
+    //   deadLetterQueue,
+    // });
 
     // lambda that serves as a producer for main queue:
     const producerFunction = new lambda.Function(this, "producer-lambda", {
