@@ -1,5 +1,6 @@
 const aws = require('aws-sdk');
-aws.config.update({ region: "us-east-1" });
+// require('dotenv').config();
+aws.config.update({ region: 'ca-central-1' });
 const sns = new aws.SNS();
 
 exports.handler = (event) => {
@@ -7,9 +8,10 @@ exports.handler = (event) => {
     console.log("attributes:", attributes)
     const result = {};
     for (const key in attributes) {
+      const append = attributes[key]['dataType'] === 'Number' ? '99999' : `--${attributes[key]['dataType']}`
       result[key] = {
         "DataType": `${attributes[key]["dataType"]}`,
-        "StringValue": `${attributes[key]["stringValue"]}`
+        "StringValue": `${attributes[key]["stringValue"]}` + append
       }
     }
     console.log("result:", result)
@@ -23,6 +25,8 @@ exports.handler = (event) => {
       MessageAttributes: formatAttributes(record.messageAttributes),
       TopicArn: process.env.SNS_TOPIC_ARN,
     }
+
+    console.log('RECORD', record)
 
     const run = async () => {
       try {
