@@ -21,32 +21,57 @@ const getDayMonthYear = (date) => {
 exports.handler = (event, context) => {
   for (const record of event.Records) {
     const message = {
-      text: 'A message has failed to be processed',
-      attachments: [{
-        color: "#8697db",
-        fields:[
+      // text: 'A message has failed to be processed',
+      // attachments: [{
+      // color: '#8697db',
+        blocks:[
           {
-            title: 'Main queue name',
-            value: `${process.env.QUEUE_NAME}`,
+      			type: "section",
+      			text: {
+      			  type: 'mrkdwn',
+      			  text: 'A message has failed to be processed'
+      			}
+      		}, 
+          {
+            type: 'section',
+            fields: [
+              {
+                type: 'mrkdwn',
+                text: `*Main Queue:*\n${process.env.QUEUE_NAME}`
+              },
+              {
+                type: 'mrkdwn',
+                text: `*Dead Letter Queue:*\n${process.env.DLQ_NAME}`
+              },
+            ]
           },
           {
-            title: 'Dead letter queue name',
-            value: `${process.env.DLQ_NAME}`
+            type: 'section',
+            fields: [
+              {
+                type: 'mrkdwn',
+                text: '*Timestamp:*\n' + getDayMonthYear(new Date(record.Sns.Timestamp))
+              }
+            ]
           },
+       		{
+      			type: "divider"
+      		},       
           {
-            title: 'Timestamp',
-            value: getDayMonthYear(new Date(record.Sns.Timestamp)),
+            type: 'section',
+            fields: [
+              {
+                type: 'mrkdwn',
+                text: `*Message Body:*\n${record.Sns.Message}`
+              },
+              {
+                type: 'mrkdwn',
+                text: '*Message Attributes:*\n' + JSON.stringify(record.Sns.MessageAttributes)
+              }
+            ]
           },
-          {
-            title: 'Message',
-            value: `${record.Sns.Message}`,
-          },
-          {
-            title: 'Message Attributes',
-            value: JSON.stringify(record.Sns.MessageAttributes),
-          }
         ]
-      }]
+    // }];
     };
 
 
