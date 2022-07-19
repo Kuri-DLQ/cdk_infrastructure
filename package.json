@@ -1,9 +1,10 @@
 {
-  "name": "project_prototype_1",
+  "name": "aws_infrastructure",
   "version": "0.1.0",
   "bin": {
-    "project_prototype_1": "bin/project_prototype_1.js"
+    "project_prototype_1": "bin/aws_infrastructure.js"
   },
+  "main": "./bin/aws_infrastructure.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

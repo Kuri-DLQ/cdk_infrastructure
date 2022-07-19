@@ -6,4 +6,4 @@ import { DlqOnlyStack } from '../lib/DlqOnlyStack';
 
 const app = new cdk.App();
 new MainAndDlqStack(app, 'MainAndDlqStack');
-new DlqOnlyStack(app, 'DlqOnlyStack');
+// new DlqOnlyStack(app, 'DlqOnlyStack');
