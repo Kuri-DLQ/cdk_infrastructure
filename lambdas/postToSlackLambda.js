@@ -3,26 +3,88 @@ const util = require('util');
 
 const POST_OPTIONS = {
   hostname: 'hooks.slack.com',
-  path: '/services/T03PM1U0M32/B03NYJ6HH5H/C7Nmw9zGwg6DUXgKQfN4BNMs',
+  path: '/services/T035YKAM56K/B03NCKETY9F/kPqE1hPOj8piN6rxvu72ffLs',
   method: 'POST',
 };
 
+const getDayMonthYear = (date) => {
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth() + 1;
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const seconds = date.getUTCSeconds();
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
 exports.handler = (event, context) => {
-  const message = {
-    text: 'There is a message in the Dead-Letter Queue'
-  };
+  for (const record of event.Records) {
+    const message = {
+      // text: 'A message has failed to be processed',
+      // attachments: [{
+      // color: '#8697db',
+        blocks:[
+          {
+      			type: "section",
+      			text: {
+      			  type: 'mrkdwn',
+      			  text: 'A message has failed to be processed'
+      			}
+      		}, 
+          {
+            type: 'section',
+            fields: [
+              {
+                type: 'mrkdwn',
+                text: `*Main Queue:*\n${process.env.QUEUE_NAME}`
+              },
+              {
+                type: 'mrkdwn',
+                text: `*Dead Letter Queue:*\n${process.env.DLQ_NAME}`
+              },
+            ]
+          },
+          {
+            type: 'section',
+            fields: [
+              {
+                type: 'mrkdwn',
+                text: '*Timestamp:*\n' + getDayMonthYear(new Date(record.Sns.Timestamp))
+              }
+            ]
+          },
+       		{
+      			type: "divider"
+      		},       
+          {
+            type: 'section',
+            fields: [
+              {
+                type: 'mrkdwn',
+                text: `*Message Body:*\n${record.Sns.Message}`
+              },
+              {
+                type: 'mrkdwn',
+                text: '*Message Attributes:*\n' + JSON.stringify(record.Sns.MessageAttributes)
+              }
+            ]
+          },
+        ]
+    // }];
+    };
 
-  console.log('From SNS:', message);
 
-  const req = https.request(POST_OPTIONS, res => {
-    res.setEncoding('utf8');
-    res.on('data', data => {
+    const req = https.request(POST_OPTIONS, res => {
+      res.setEncoding('utf8');
+      res.on('data', data => {
         context.succeed(`Message Sent: ${data}`);
+      });
+    }).on('error', e => {
+      context.fail(`Failed: ${e}`);
     });
-  }).on('error', e  => {
-    context.fail(`Failed: ${e}`);
-  });
   
-  req.write(util.format("%j", message));
-  req.end();
+    req.write(util.format("%j", message));
+    req.end();
+  }
 };

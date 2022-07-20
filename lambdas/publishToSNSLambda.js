@@ -5,7 +5,6 @@ const sns = new aws.SNS();
 
 exports.handler = (event) => {
   const formatAttributes = (attributes) => {
-    console.log("attributes:", attributes)
     const result = {};
     for (const key in attributes) {
       const append = attributes[key]['dataType'] === 'Number' ? '99999' : `--${attributes[key]['dataType']}`
@@ -14,7 +13,6 @@ exports.handler = (event) => {
         "StringValue": `${attributes[key]["stringValue"]}` + append
       }
     }
-    console.log("result:", result)
     return result;
   }
 
