@@ -81,6 +81,12 @@ export class MainQueueAndDLQStack extends Stack {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambdas'),
       handler: 'postToSlackLambda.handler',
+      environment: {
+        QUEUE_URL: mainQueue.queueUrl,
+        QUEUE_NAME: mainQueue.queueName,
+        DLQ_URL: DLQ.queueUrl,
+        DLQ_NAME: DLQ.queueName
+      }
     })
 
     topic.addSubscription(new subs.LambdaSubscription(writerFunction));
