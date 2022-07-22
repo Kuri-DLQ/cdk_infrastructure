@@ -1,9 +1,10 @@
 const https = require('https');
 const util = require('util');
+require('dotenv').config();
 
 const POST_OPTIONS = {
   hostname: 'hooks.slack.com',
-  path: '/services/T03PM1U0M32/B03NYJ6HH5H/C7Nmw9zGwg6DUXgKQfN4BNMs',
+  path: process.env.SLACK_PATH,
   method: 'POST',
 };
 

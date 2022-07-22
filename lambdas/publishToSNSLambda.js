@@ -1,6 +1,6 @@
 const aws = require('aws-sdk');
 // require('dotenv').config();
-aws.config.update({ region: 'us-east-1'})
+aws.config.update({ region: process.env.REGION })
 const sns = new aws.SNS();
 
 exports.handler = (event) => {

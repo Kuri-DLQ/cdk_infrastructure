@@ -6,6 +6,7 @@ import * as dynamo from 'aws-cdk-lib/aws-dynamodb';
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
+const fs = require('fs-extra')
 
 export class MainQueueAndDLQStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -89,6 +90,12 @@ export class MainQueueAndDLQStack extends Stack {
       }
     })
 
+    // const envFile = `STACK="${stackChoice}"\nACCESS_KEY="${awsAccessKey}"\nSECRET_KEY="${awsSecretKey}"\n` +
+    // `REGION="${awsRegion}"\nSLACK_PATH="${slackPath}"\nCLIENT_PORT=${clientPort}\nSERVER_PORT=${serverPort}`
+
+    const envFile = `QUEUE_URL="${mainQueue.queueUrl}"\nTABLE_NAME="${table.tableName}"\nDEAD_LETTER_ARN="${DLQ.queueArn}"`;
+    fs.appendFile('../app_server_express/.env', envFile);
+    
     topic.addSubscription(new subs.LambdaSubscription(writerFunction));
     topic.addSubscription(new subs.LambdaSubscription(slackFunction));
 

@@ -1,6 +1,6 @@
 const aws = require('aws-sdk');
-// require('dotenv').config();
-aws.config.update({ region: 'ca-central-1' });
+require('dotenv').config();
+aws.config.update({ region: process.env.REGION });
 const sqs = new aws.SQS();
 
 exports.handler = (event) => {
