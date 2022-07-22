@@ -1,6 +1,6 @@
 const aws = require('aws-sdk');
 // require('dotenv').config();
-aws.config.update({ region: 'ca-central-1' });
+aws.config.update({ region: 'us-east-1'})
 const sns = new aws.SNS();
 
 exports.handler = (event) => {
@@ -35,7 +35,7 @@ exports.handler = (event) => {
         console.log("Error", err.stack);
       }
     };
-    
+
     run();
   }
 

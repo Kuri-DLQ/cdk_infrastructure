@@ -1,6 +1,6 @@
 const aws = require('aws-sdk');
 // require('dotenv').config();
-aws.config.update({ region: 'ca-central-1' });
+aws.config.update({ region: 'us-east-1'})
 const dynamodb = new aws.DynamoDB();
 
 const handleAttributeType = (attributes) => {
@@ -15,7 +15,7 @@ const handleAttributeType = (attributes) => {
       const type = splitAttr[splitAttr.length - 1]
       splitAttr.pop()
       splitAttr = splitAttr.join('--')
-  
+
       attributes[key]['Type'] = type
       attributes[key]["Value"] = splitAttr
     }
@@ -36,7 +36,7 @@ exports.handler = (event) => {
         "Attributes": { S: JSON.stringify(handleAttributeType(record.Sns.MessageAttributes)) }
       }
     }
-      
+
     const run = async () => {
       try {
         const data = await dynamodb.putItem(params).promise();
