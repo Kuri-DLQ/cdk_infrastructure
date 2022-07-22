@@ -1,8 +1,8 @@
 {
-  "name": "project_prototype_1",
+  "name": "main_queue_and_dlq_stack",
   "version": "0.1.0",
   "bin": {
-    "project_prototype_1": "bin/project_prototype_1.js"
+    "main_queue_and_dlq_stack": "bin/main_queue_and_dlq_stack.js"
   },
   "scripts": {
     "build": "tsc",
@@ -31,6 +31,7 @@
     "constructs": "^10.0.0",
     "dotenv": "^16.0.1",
     "phin": "^3.6.1",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "dotenv": "^16.0.1"
   }
 }
