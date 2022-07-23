@@ -15,7 +15,12 @@ const getDayMonthYear = (date) => {
   const minutes = date.getUTCMinutes();
   const seconds = date.getUTCSeconds();
 
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+  return `${year}-` +
+`${String(month).length === 1 ? '0' + month : month}-` +
+`${String(day).length === 1 ? '0' + day : day} ` +
+`${String(hours).length === 1 ? '0' + hours : hours}:` +
+`${String(minutes).length === 1 ? '0' + minutes : minutes}:` +
+`${String(seconds).length === 1 ? '0' + seconds : seconds}`
 }
 
 const reformatAttributes = (attributes) => {
