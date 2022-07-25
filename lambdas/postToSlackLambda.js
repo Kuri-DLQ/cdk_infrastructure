@@ -96,6 +96,9 @@ exports.handler = (event, context) => {
               }
             ]
           },
+          {
+      			type: "divider"
+      		},
         ]
     // }];
     };
