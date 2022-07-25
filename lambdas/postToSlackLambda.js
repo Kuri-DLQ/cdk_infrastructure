@@ -50,7 +50,7 @@ exports.handler = (event, context) => {
       			type: "section",
       			text: {
       			  type: 'mrkdwn',
-      			  text: 'From Kuri: \n\n A message has failed to be processed and was added to the DLQ'
+      			  text: "From Kuri:\n\n>A message has failed to be processed and was added to the DLQ\n>Please visit the Kuri dashboard to make modifications and resend"
       			},
             "accessory": {
               "type": "image",
@@ -67,19 +67,23 @@ exports.handler = (event, context) => {
               },
               {
                 type: 'mrkdwn',
-                text: `*Dead Letter Queue:*\n${process.env.DLQ_NAME}`
-              },
-            ]
-          },
-          {
-            type: 'section',
-            fields: [
-              {
-                type: 'mrkdwn',
                 text: '*Timestamp (UTC):*\n' + getDayMonthYear(new Date(record.Sns.Timestamp))
-              }
+              },
+              // {
+              //   type: 'mrkdwn',
+              //   text: `*Dead Letter Queue:*\n${process.env.DLQ_NAME}`
+              // },
             ]
           },
+          // {
+          //   type: 'section',
+          //   fields: [
+          //     {
+          //       type: 'mrkdwn',
+          //       text: '*Timestamp (UTC):*\n' + getDayMonthYear(new Date(record.Sns.Timestamp))
+          //     }
+          //   ]
+          // },
        		{
       			type: "divider"
       		},
