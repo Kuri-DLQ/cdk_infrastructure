@@ -1,4 +1,4 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { Stack, StackProps, Duration } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as lambda from 'aws-cdk-lib/aws-lambda'
@@ -27,6 +27,7 @@ export class MainQueueAndDLQStack extends Stack {
       code: lambda.Code.fromAsset('lambdas'),
       handler: 'producerLambda.handler',
       runtime: lambda.Runtime.NODEJS_16_X,
+      timeout: Duration.seconds(30),
       environment: {
         QUEUE_URL: mainQueue.queueUrl,
       }
@@ -39,6 +40,7 @@ export class MainQueueAndDLQStack extends Stack {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambdas'),
       handler: 'consumerLambda.handler',
+      timeout: Duration.seconds(30),
       events: [
         new SqsEventSource(mainQueue),
       ]
@@ -51,6 +53,7 @@ export class MainQueueAndDLQStack extends Stack {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambdas'),
       handler: 'publishToSNSLambda.handler',
+      timeout: Duration.seconds(30),
       environment: {
         SNS_TOPIC_ARN: topic.topicArn,
       },
@@ -71,6 +74,7 @@ export class MainQueueAndDLQStack extends Stack {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambdas'),
       handler: 'writeToDynamoLambda.handler',
+      timeout: Duration.seconds(30),
       environment: {
         TABLE_NAME: table.tableName,
       },

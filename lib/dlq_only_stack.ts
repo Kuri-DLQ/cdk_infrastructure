@@ -1,4 +1,4 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { Stack, StackProps, Duration } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
 import * as lambda from 'aws-cdk-lib/aws-lambda'
@@ -25,6 +25,7 @@ export class DlqOnlyStack extends Stack {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambdas'),
       handler: 'publishToSNSLambda.handler',
+      timeout: Duration.seconds(30),
       environment: {
         SNS_TOPIC_ARN: topic.topicArn,
       },
@@ -45,6 +46,7 @@ export class DlqOnlyStack extends Stack {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambdas'),
       handler: 'writeToDynamoLambda.handler',
+      timeout: Duration.seconds(30),
       environment: {
         TABLE_NAME: table.tableName,
       },
@@ -55,6 +57,7 @@ export class DlqOnlyStack extends Stack {
       runtime: lambda.Runtime.NODEJS_16_X,
       code: lambda.Code.fromAsset('lambdas'),
       handler: 'postToSlackLambda.handler',
+      timeout: Duration.seconds(30),
     })
 
     topic.addSubscription(new subs.LambdaSubscription(writerFunction));
