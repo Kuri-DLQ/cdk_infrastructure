@@ -55,8 +55,13 @@ exports.handler = (event, context) => {
       			type: "section",
       			text: {
       			  type: 'mrkdwn',
-      			  text: 'A message has failed to be processed'
-      			}
+      			  text: "From Kuri:\n\n>A message has failed to be processed and was added to the DLQ\n>Please visit the Kuri dashboard to make modifications and resend"
+      			},
+            "accessory": {
+              "type": "image",
+              "image_url": "https://i.postimg.cc/v8PGLdXz/app-icon.png",
+              "alt_text": "kuri logo"
+            }
       		},
           {
             type: 'section',
@@ -67,19 +72,23 @@ exports.handler = (event, context) => {
               },
               {
                 type: 'mrkdwn',
-                text: `*Dead Letter Queue:*\n${process.env.DLQ_NAME}`
+                text: '*Timestamp (UTC):*\n' + getDayMonthYear(new Date(record.Sns.Timestamp))
               },
+              // {
+              //   type: 'mrkdwn',
+              //   text: `*Dead Letter Queue:*\n${process.env.DLQ_NAME}`
+              // },
             ]
           },
-          {
-            type: 'section',
-            fields: [
-              {
-                type: 'mrkdwn',
-                text: '*Timestamp:*\n' + getDayMonthYear(new Date(record.Sns.Timestamp))
-              }
-            ]
-          },
+          // {
+          //   type: 'section',
+          //   fields: [
+          //     {
+          //       type: 'mrkdwn',
+          //       text: '*Timestamp (UTC):*\n' + getDayMonthYear(new Date(record.Sns.Timestamp))
+          //     }
+          //   ]
+          // },
        		{
       			type: "divider"
       		},
@@ -96,6 +105,9 @@ exports.handler = (event, context) => {
               }
             ]
           },
+          {
+      			type: "divider"
+      		},
         ]
     // }];
     };
